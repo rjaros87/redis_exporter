@@ -106,7 +106,7 @@ func TestPasswordInvalid(t *testing.T) {
 	}
 
 	testPwd := "redis-password"
-	uri := strings.Replace(os.Getenv("TEST_PWD_REDIS_URI"), testPwd, "wrong-pwd", -1)
+	uri := strings.ReplaceAll(os.Getenv("TEST_PWD_REDIS_URI"), testPwd, "wrong-pwd")
 
 	e, _ := NewRedisExporter(uri, Options{Namespace: "test", Registry: prometheus.NewRegistry()})
 	ts := httptest.NewServer(e)

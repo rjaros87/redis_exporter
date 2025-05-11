@@ -363,9 +363,7 @@ func TestScanKeys(t *testing.T) {
 				t.Errorf("\"Empty pattern\" error message expected, but got: %s", err.Error())
 			}
 		} else {
-			if len(got) >= 0 {
-				t.Errorf("Error expected, got valid response: %#v", got)
-			}
+			t.Errorf("Error expected, got valid response: %#v", got)
 		}
 	}
 }
@@ -459,10 +457,8 @@ func TestGetKeysFromPatterns(t *testing.T) {
 	got, err := getKeysFromPatterns(c, invalidKeys, defaultCount)
 	if err != nil {
 		t.Logf("Expected error - \"invalid DB\": %#v", err)
-	} else {
-		if len(got) != 0 {
-			t.Errorf("Error expected with invalid database %#v, got valid response: %#v", invalidKeys, got)
-		}
+	} else if len(got) != 0 {
+		t.Errorf("Error expected with invalid database %#v, got valid response: %#v", invalidKeys, got)
 	}
 }
 
@@ -775,10 +771,8 @@ func TestGetKeysCount(t *testing.T) {
 
 	got, err := getKeysCount(c, "pattern", invalidCount)
 	if err != nil {
-		t.Logf("Expected error - \"error retrieving keys\": %#v", err)
-	} else {
-		if got >= 0 {
-			t.Errorf("Error expected with invalidCount option \"%#v\", got valid response: %#v", invalidCount, got)
-		}
+		t.Errorf("Expected error - \"error retrieving keys\": %#v", err)
+	} else if got >= 0 {
+		t.Errorf("Error expected with invalidCount option \"%#v\", got valid response: %#v", invalidCount, got)
 	}
 }

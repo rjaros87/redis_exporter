@@ -99,7 +99,7 @@ func main() {
 		excludeLatencyHistogramMetrics = flag.Bool("exclude-latency-histogram-metrics", getEnvBool("REDIS_EXPORTER_EXCLUDE_LATENCY_HISTOGRAM_METRICS", false), "Do not try to collect latency histogram metrics")
 		redactConfigMetrics            = flag.Bool("redact-config-metrics", getEnvBool("REDIS_EXPORTER_REDACT_CONFIG_METRICS", true), "Whether to redact config settings that include potentially sensitive information like passwords")
 		inclSystemMetrics              = flag.Bool("include-system-metrics", getEnvBool("REDIS_EXPORTER_INCL_SYSTEM_METRICS", false), "Whether to include system metrics like e.g. redis_total_system_memory_bytes")
-		skipTLSVerification            = flag.Bool("skip-tls-verification", getEnvBool("REDIS_EXPORTER_SKIP_TLS_VERIFICATION", false), "Whether to to skip TLS verification")
+		skipTLSVerification            = flag.Bool("skip-tls-verification", getEnvBool("REDIS_EXPORTER_SKIP_TLS_VERIFICATION", false), "Whether to skip TLS verification")
 		skipCheckKeysForRoleMaster     = flag.Bool("skip-checkkeys-for-role-master", getEnvBool("REDIS_EXPORTER_SKIP_CHECKKEYS_FOR_ROLE_MASTER", false), "Whether to skip gathering the check-keys metrics (size, val) when the instance is of type master (reduce load on master nodes)")
 		basicAuthUsername              = flag.String("basic-auth-username", getEnv("REDIS_EXPORTER_BASIC_AUTH_USERNAME", ""), "Username for basic authentication")
 		basicAuthPassword              = flag.String("basic-auth-password", getEnv("REDIS_EXPORTER_BASIC_AUTH_PASSWORD", ""), "Password for basic authentication")
@@ -146,9 +146,11 @@ func main() {
 	}
 
 	var ls map[string][]byte
+
 	if *scriptPath != "" {
 		scripts := strings.Split(*scriptPath, ",")
 		ls = make(map[string][]byte, len(scripts))
+
 		for _, script := range scripts {
 			if ls[script], err = os.ReadFile(script); err != nil {
 				log.Fatalf("Error loading script file %s    err: %s", script, err)
@@ -215,10 +217,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Verify that initial client keypair and CA are accepted
+	// Verify that initial client key-pair and CA are accepted
 	if (*tlsClientCertFile != "") != (*tlsClientKeyFile != "") {
 		log.Fatal("TLS client key file and cert file should both be present")
 	}
+
 	_, err = exp.CreateClientTLSConfig()
 	if err != nil {
 		log.Fatal(err)
@@ -230,6 +233,7 @@ func main() {
 		Addr:    *listenAddress,
 		Handler: exp,
 	}
+
 	go func() {
 		if *tlsServerCertFile != "" && *tlsServerKeyFile != "" {
 			log.Debugf("Bind as TLS using cert %s and key %s", *tlsServerCertFile, *tlsServerKeyFile)
@@ -238,6 +242,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
+
 			server.TLSConfig = tlsConfig
 			if err := server.ListenAndServeTLS("", ""); err != nil && !errors.Is(err, http.ErrServerClosed) {
 				log.Fatalf("TLS Server error: %v", err)
@@ -262,5 +267,6 @@ func main() {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("Server shutdown failed: %v", err)
 	}
+
 	log.Infof("Server shut down gracefully")
 }

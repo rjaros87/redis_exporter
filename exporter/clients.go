@@ -12,7 +12,7 @@ import (
 )
 
 type ClientInfo struct {
-	Id,
+	ID,
 	Name,
 	User,
 	Flags,
@@ -56,7 +56,7 @@ func parseClientListString(clientInfo string) (*ClientInfo, bool) {
 
 		switch vPart[0] {
 		case "id":
-			connectedClient.Id = vPart[1]
+			connectedClient.ID = vPart[1]
 		case "name":
 			connectedClient.Name = vPart[1]
 		case "user":
@@ -133,7 +133,7 @@ func (e *Exporter) extractConnectedClientMetrics(ch chan<- prometheus.Metric, c 
 	for _, c := range strings.Split(reply, "\n") {
 		if info, ok := parseClientListString(c); ok {
 			clientInfoLabels := []string{"id", "name", "flags", "db", "host"}
-			clientInfoLabelsValues := []string{info.Id, info.Name, info.Flags, info.Db, info.Host}
+			clientInfoLabelsValues := []string{info.ID, info.Name, info.Flags, info.Db, info.Host}
 
 			if e.options.ExportClientsInclPort {
 				clientInfoLabels = append(clientInfoLabels, "port")
@@ -163,7 +163,7 @@ func (e *Exporter) extractConnectedClientMetrics(ch chan<- prometheus.Metric, c 
 			)
 
 			clientBaseLabels := []string{"id", "name"}
-			clientBaseLabelsValues := []string{info.Id, info.Name}
+			clientBaseLabelsValues := []string{info.ID, info.Name}
 
 			e.metricDescriptions["connected_client_output_buffer_memory_usage_bytes"] = newMetricDescr(
 				e.options.Namespace,

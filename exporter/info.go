@@ -40,29 +40,29 @@ const (
 	InstanceRoleSlave = "slave"
 )
 
-func extractVal(s string) (val float64, err error) {
+func extractVal(s string) (float64, error) {
 	split := strings.Split(s, "=")
 	if len(split) != 2 {
 		return 0, fmt.Errorf("nope")
 	}
-	val, err = strconv.ParseFloat(split[1], 64)
+	val, err := strconv.ParseFloat(split[1], 64)
 	if err != nil {
-		return 0, fmt.Errorf("nope")
+		return 0, fmt.Errorf("extractVal err: %w", err)
 	}
-	return
+	return val, err
 }
 
-func extractPercentileVal(s string) (percentile float64, val float64, err error) {
+func extractPercentileVal(s string) (float64, float64, error) {
 	split := strings.Split(s, "=")
 	if len(split) != 2 {
-		return
+		return 0, 0, fmt.Errorf("extractPercentileVal - invalid input")
 	}
-	percentile, err = strconv.ParseFloat(split[0][1:], 64)
+	percentile, err := strconv.ParseFloat(split[0][1:], 64)
 	if err != nil {
-		return
+		return 0, 0, err
 	}
-	val, err = strconv.ParseFloat(split[1], 64)
-	return
+	val, err := strconv.ParseFloat(split[1], 64)
+	return percentile, val, err
 }
 
 // returns the role of the instance we're scraping (master or slave)

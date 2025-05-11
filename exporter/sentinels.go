@@ -118,7 +118,7 @@ func (e *Exporter) processSentinelSentinels(ch chan<- prometheus.Metric, sentine
 		if strings.Contains(sentinelFlags, "s_down") {
 			continue
 		}
-		masterOkSentinels = masterOkSentinels + 1
+		masterOkSentinels += 1
 	}
 	e.registerConstMetricGauge(ch, "sentinel_master_ok_sentinels", float64(masterOkSentinels), labels...)
 }
@@ -142,7 +142,7 @@ func (e *Exporter) processSentinelSlaves(ch chan<- prometheus.Metric, slaveDetai
 		if strings.Contains(slaveFlags, "s_down") {
 			continue
 		}
-		masterOkSlaves = masterOkSlaves + 1
+		masterOkSlaves += 1
 	}
 	e.registerConstMetricGauge(ch, "sentinel_master_ok_slaves", float64(masterOkSlaves), labels...)
 }

@@ -173,6 +173,9 @@ func TestHTTPScrapeWithUsername(t *testing.T) {
 	// use provided uri but remove password before sending it over the wire
 	// after all, we want to test the lookup in the password map
 	u, err := url.Parse(os.Getenv("TEST_USER_PWD_REDIS_URI"))
+	if err != nil {
+		t.Fatalf("Test Failed, error: %v", err)
+	}
 	u.User = url.User(u.User.Username())
 	uriWithUser := u.String()
 	uriWithUser = strings.Replace(uriWithUser, fmt.Sprintf(":@%s", u.Host), fmt.Sprintf("@%s", u.Host), 1)

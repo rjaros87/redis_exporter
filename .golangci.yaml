@@ -1,16 +1,22 @@
 version: "2"
 linters:
-  default: none
-  enable:
-    - errcheck
-    - gocritic
-    - govet
-    - ineffassign
-    - misspell
+  default: all
+  disable:
     - revive
-    - staticcheck
-    - unconvert
-    - unused
+    - wsl
+    - varnamelen
+    - depguard
+    - lll
+#  enable:
+#    - errcheck
+#    - gocritic
+#    - govet
+#    - ineffassign
+#    - misspell
+#    - revive
+#    - staticcheck
+#    - unconvert
+#    - unused
   settings:
     gocritic:
       disable-all: true
@@ -103,10 +109,16 @@ linters:
         - -ST1022
         - -ST1023
   exclusions:
+    presets:
+      - comments
+      - std-error-handling
+      - common-false-positives
+      - legacy
     generated: lax
     rules:
       - linters:
           - staticcheck
+        text: 'SA1019: "github.com/rclone/rclone/cmd/serve/httplib" is deprecated'
     paths:
       - third_party$
       - builtin$

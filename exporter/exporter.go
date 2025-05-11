@@ -377,6 +377,10 @@ func NewRedisExporter(uri string, opts Options) (*Exporter, error) {
 		e.options.ConfigCommandName = "CONFIG"
 	}
 
+	/*
+		test all the provided options to check if they parse cleanly
+	*/
+
 	if keys, err := parseKeyArg(opts.CheckKeys); err != nil {
 		return nil, fmt.Errorf("couldn't parse check-keys: %s", err)
 	} else {

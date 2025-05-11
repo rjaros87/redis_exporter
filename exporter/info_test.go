@@ -252,9 +252,9 @@ func TestClusterSlave(t *testing.T) {
 			t.Errorf("Did not find key [%s] \nbody: %s", want, body)
 		}
 	}
-	hostReg, _ := regexp.Compile(`master_host="([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))(\.([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))){3}"`)
+	hostReg := regexp.MustCompile(`master_host="([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))(\.([0,1]?\d{1,2}|2([0-4][0-9]|5[0-5]))){3}"`)
 	masterHost := hostReg.FindString(body)
-	portReg, _ := regexp.Compile(`master_port="(\d+)"`)
+	portReg := regexp.MustCompile(`master_port="(\d+)"`)
 	masterPort := portReg.FindString(body)
 	for wantedKey, wantedVal := range map[string]int{
 		masterHost: 5,

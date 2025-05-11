@@ -426,8 +426,8 @@ func getKeysCount(c redis.Conn, pattern string, count int64) (int, error) {
 var globPattern = regexp.MustCompile(`[\?\*\[\]\^]+`)
 
 // getKeysFromPatterns does a SCAN for a key if the key contains pattern characters
-func getKeysFromPatterns(c redis.Conn, keys []dbKeyPair, count int64) (expandedKeys []dbKeyPair, err error) {
-	expandedKeys = []dbKeyPair{}
+func getKeysFromPatterns(c redis.Conn, keys []dbKeyPair, count int64) ([]dbKeyPair, error) {
+	expandedKeys := []dbKeyPair{}
 	for _, k := range keys {
 		if globPattern.MatchString(k.key) {
 			if _, err := doRedisCmd(c, "SELECT", k.db); err != nil {
@@ -447,7 +447,7 @@ func getKeysFromPatterns(c redis.Conn, keys []dbKeyPair, count int64) (expandedK
 		}
 	}
 
-	return expandedKeys, err
+	return expandedKeys, nil
 }
 
 // parseKeyArgs splits a command-line supplied argument into a slice of dbKeyPairs.
@@ -496,10 +496,12 @@ func parseKeyArg(keysArgString string) (keys []dbKeyPair, err error) {
 
 // scanForKeys returns a list of keys matching `pattern` by using `SCAN`, which is safer for production systems than using `KEYS`.
 // This function was adapted from: https://github.com/reisinger/examples-redigo
-func scanKeys(c redis.Conn, pattern string, count int64) (keys []interface{}, err error) {
+func scanKeys(c redis.Conn, pattern string, count int64) ([]interface{}, error) {
 	if pattern == "" {
-		return keys, fmt.Errorf("pattern shouldn't be empty")
+		return nil, fmt.Errorf("pattern shouldn't be empty")
 	}
+
+	var keys []interface{}
 
 	iter := 0
 	for {

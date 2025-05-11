@@ -10,7 +10,6 @@ package exporter
 
 import (
 	"fmt"
-	"github.com/mna/redisc"
 	"net/http/httptest"
 	"os"
 	"strings"
@@ -18,6 +17,7 @@ import (
 	"time"
 
 	"github.com/gomodule/redigo/redis"
+	"github.com/mna/redisc"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	dto "github.com/prometheus/client_model/go"
