@@ -322,18 +322,24 @@ func (e *Exporter) getKeyInfoPipelined(ch chan<- prometheus.Metric, c redis.Conn
 
 			log.Debugf("Done with c.Receive() x 3")
 
-			if hllErr == nil {
-				// hyperloglog
-				size = hllSize
+			switch {
 
-				// "TYPE" reports hll as string
-				// this will prevent treating the result as a string by the caller (e.g. call GET)
-				keyType = "HLL"
-			} else if strErr == nil {
-				// not hll so possibly a string?
-				size = strSize
-				keyType = "string"
-			} else {
+			case hllErr == nil:
+				{
+					// hyperloglog
+					size = hllSize
+
+					// "TYPE" reports hll as string
+					// this will prevent treating the result as a string by the caller (e.g. call GET)
+					keyType = "HLL"
+				}
+			case strErr == nil:
+				{
+					// not hll so possibly a string?
+					size = strSize
+					keyType = "string"
+				}
+			default:
 				continue
 			}
 

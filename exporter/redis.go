@@ -108,7 +108,7 @@ func (e *Exporter) connectToRedisCluster() (redis.Conn, error) {
 		}
 	} else {
 		if frags := strings.Split(uri, ":"); len(frags) != 2 {
-			uri = uri + ":6379"
+			uri += ":6379"
 		}
 	}
 

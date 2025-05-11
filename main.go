@@ -230,8 +230,9 @@ func main() {
 	log.Infof("Providing metrics at %s%s", *listenAddress, *metricPath)
 	log.Debugf("Configured redis addr: %#v", *redisAddr)
 	server := &http.Server{
-		Addr:    *listenAddress,
-		Handler: exp,
+		Addr:              *listenAddress,
+		Handler:           exp,
+		ReadHeaderTimeout: 5 * time.Second,
 	}
 
 	go func() {
@@ -265,7 +266,8 @@ func main() {
 
 	// Shutdown the HTTP server gracefully
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatalf("Server shutdown failed: %v", err)
+		log.Errorf("Server shutdown failed: %v", err)
+		return
 	}
 
 	log.Infof("Server shut down gracefully")

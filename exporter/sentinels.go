@@ -31,7 +31,6 @@ func (e *Exporter) handleMetricsSentinel(ch chan<- prometheus.Metric, fieldKey s
 		e.registerConstMetricGauge(ch, "sentinel_master_status", masterStatusNum, masterName, masterAddress, masterStatus)
 		e.registerConstMetricGauge(ch, "sentinel_master_slaves", masterSlaves, masterName, masterAddress)
 		e.registerConstMetricGauge(ch, "sentinel_master_sentinels", masterSentinels, masterName, masterAddress)
-		return
 	}
 }
 

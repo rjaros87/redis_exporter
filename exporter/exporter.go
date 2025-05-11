@@ -382,31 +382,31 @@ func NewRedisExporter(uri string, opts Options) (*Exporter, error) {
 	*/
 
 	if keys, err := parseKeyArg(opts.CheckKeys); err != nil {
-		return nil, fmt.Errorf("couldn't parse check-keys: %s", err)
+		return nil, fmt.Errorf("couldn't parse check-keys: %w", err)
 	} else {
 		log.Debugf("keys: %#v", keys)
 	}
 
 	if singleKeys, err := parseKeyArg(opts.CheckSingleKeys); err != nil {
-		return nil, fmt.Errorf("couldn't parse check-single-keys: %s", err)
+		return nil, fmt.Errorf("couldn't parse check-single-keys: %w", err)
 	} else {
 		log.Debugf("singleKeys: %#v", singleKeys)
 	}
 
 	if streams, err := parseKeyArg(opts.CheckStreams); err != nil {
-		return nil, fmt.Errorf("couldn't parse check-streams: %s", err)
+		return nil, fmt.Errorf("couldn't parse check-streams: %w", err)
 	} else {
 		log.Debugf("streams: %#v", streams)
 	}
 
 	if singleStreams, err := parseKeyArg(opts.CheckSingleStreams); err != nil {
-		return nil, fmt.Errorf("couldn't parse check-single-streams: %s", err)
+		return nil, fmt.Errorf("couldn't parse check-single-streams: %w", err)
 	} else {
 		log.Debugf("singleStreams: %#v", singleStreams)
 	}
 
 	if countKeys, err := parseKeyArg(opts.CountKeys); err != nil {
-		return nil, fmt.Errorf("couldn't parse count-keys: %s", err)
+		return nil, fmt.Errorf("couldn't parse count-keys: %w", err)
 	} else {
 		log.Debugf("countKeys: %#v", countKeys)
 	}

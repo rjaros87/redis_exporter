@@ -67,10 +67,9 @@ func (e *Exporter) parseAndRegisterConstMetric(ch chan<- prometheus.Metric, fiel
 		t = prometheus.CounterValue
 	}
 
-	switch metricName {
-	case "latest_fork_usec":
+	if metricName == "latest_fork_usec" {
 		metricName = "latest_fork_seconds"
-		val = val / 1e6
+		val /= 1e6
 	}
 
 	e.registerConstMetric(ch, metricName, val, t)
