@@ -1,0 +1,51 @@
+name: "Vulnerability Scanning (Cron/Manual/Release)"
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Release"]
+    types: 
+      - completed
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    
+    # Wymagane uprawnienia do przesłania wyników SARIF
+    permissions:
+      security-events: write
+      
+    steps:
+      - uses: actions/checkout@v4 # Nadal potrzebne do pobrania plików workflow i konfiguracji
+      
+      - name: Anchore Scan - Official Alpine Release
+        uses: anchore/scan-action@v6
+        id: scan-release-alpine
+        with:
+          image: "oliver006/redis_exporter:alpine" 
+          severity-cutoff: "low"
+          by-cve: true
+          fail-build: false 
+          
+      - name: Anchore Scan - Official Scratch Release
+        uses: anchore/scan-action@v6
+        id: scan-release-scratch
+        with:
+          image: "oliver006/redis_exporter:latest" 
+          severity-cutoff: "low"
+          by-cve: true
+          fail-build: false
+          
+      - name: Upload Anchore SARIF (Release Alpine)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.scan-release-alpine.outputs.sarif }}
+          category: release-alpine-vulnerability-scan 
+      
+      - name: Upload Anchore SARIF (Release Scratch)
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.scan-release-scratch.outputs.sarif }}
+          category: release-scratch-vulnerability-scan
